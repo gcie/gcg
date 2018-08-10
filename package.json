@@ -3,14 +3,18 @@
   "version": "1.0.0",
   "description": "Codeforces contest helper",
   "main": "gcg.js",
+  "bin": {
+    "gcg": "./index.js"
+  },
   "scripts": {
+    "start": "node gcg.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tao24/gcg.git"
   },
-  "author": "Grzegorz Ciesielski <grzegorz.ciesielski@mail.pl>",
+  "author": "Grzegorz Ciesielski <grzegorz.ciesielski@mail.com>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tao24/gcg/issues"

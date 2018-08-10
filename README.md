@@ -1,18 +1,24 @@
 # Generator projektu
 
-## Instrukcja użytkowania
-
-Tryb interaktywny - generuje strukturę projektu:
+## Instalacja
 
 ```
-node gcg.js
+npm install -g https://github.com/tao24/gcg.git
 ```
 
-Tryb wsadowy - kompiluje i testuje program na wszystkich testach w folderze ```<nazwa_programu>```:
+## Instrukcja obsługi
 ```
-node gcg.js <nazwa_programu> [--no-compile]
+gcg --init
+```
+Generuje szablonowe pliki ```.cpp``` oraz przygotowuje testy w folderze ```tests```.
+
+```
+gcg <nazwa_programu> [--no-compile]
 ```
 
-Uwaga: ```<nazwa_progamu>``` powinna by bez rozszerzenia.
+Kompiluje i testuje program ```<nazwa-programu>.cpp``` na testach: ```tests\<nazwa-programu>*.in```, a wyniki
+
+
+**Uwaga**: ```<nazwa_progamu>``` powinna być bez rozszerzenia.
 
 Flaga ```--no-compile``` wyłącza kompilowanie.
