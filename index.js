@@ -35,31 +35,31 @@ function checkFile(filename) {
         }
         items.forEach(item => {
             if(item.endsWith('.in') && item.startsWith(filename)) {
-                validateProgram(filename, 'tests/' + item, 'tests/' + item.replace(/\.[^/.]+$/, "") + '.out');
+                validateProgram('./' + filename, './tests/' + item, './tests/' + item.replace(/\.[^/.]+$/, "") + '.out');
             }
         });
     });
 }
 
 function generateDirectory(tasks, tests) {
-    if(!fs.existsSync('tests')) {
-        fs.mkdirSync('tests');
+    if(!fs.existsSync('./tests')) {
+        fs.mkdirSync('./tests');
         console.log("Created directory: tests");
     }
     var a = 'a';
     for (let i = 0; i < +tasks; i++) {
-        if(!fs.existsSync(a + '.cpp')) {
-            fs.writeFileSync(a + '.cpp', sampleProgram);
-            console.log('Created file:', a + '.cpp');
+        if(!fs.existsSync('./' + a + '.cpp')) {
+            fs.writeFileSync('./' + a + '.cpp', sampleProgram);
+            console.log('Created file:', './' + a + '.cpp');
         }
         for(let j = 1; j <= tests; j++) {
-            if(!fs.existsSync('tests/' + a + j + '.in')) {
-                fs.writeFileSync('tests/' + a + j + '.in', '');
-                console.log('Created file:', 'tests/' + a + j + '.in');
+            if(!fs.existsSync('./tests/' + a + j + '.in')) {
+                fs.writeFileSync('./tests/' + a + j + '.in', '');
+                console.log('Created file:', './tests/' + a + j + '.in');
             }
-            if(!fs.existsSync('tests/' + a + j + '.out')) {
-                fs.writeFileSync('tests/' + a + j + '.out', '');
-                console.log('Created file:', 'tests/' + a + j + '.out');
+            if(!fs.existsSync('./tests/' + a + j + '.out')) {
+                fs.writeFileSync('./tests/' + a + j + '.out', '');
+                console.log('Created file:', './tests/' + a + j + '.out');
             }
         }
         a = String.fromCharCode(a.charCodeAt(0) + 1);
