@@ -1,39 +1,68 @@
 import minimist from 'minimist';
-import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
+import { readFileSync, exists, mkdir, writeFile, existsSync } from 'fs';
+import { Logger } from './logger';
 
-const sampleProgram = readFileSync(__dirname + '../res/template.cpp');
+export class Initializer {
+    private logger: Logger;
+    private tasks: number;
+    private tests: number;
+    private overwrite: boolean;
+    private sampleProgram = readFileSync(__dirname + '/../res/template.cpp');
 
-function generateDirectory(tasks: number, tests: number, overwrite: boolean = false): void {
-    if(!existsSync('tests')) {
-        mkdirSync('tests');
-        console.log("Created directory: tests");
+    constructor(private args: minimist.ParsedArgs) { 
+        this.logger = new Logger(args);
+        this.tasks = +args.tasks;
+        this.tests = +args.tests;
+        this.overwrite = args.overwrite;
     }
-    var a = 'a';
-    for (let i = 0; i < +tasks; i++) {
-        if(overwrite || !existsSync(a + '.cpp')) {
-            writeFileSync(a + '.cpp', sampleProgram);
-            console.log('Created file:', a + '.cpp');
+
+    init(): void {
+        if(this.tasks < 0 || this.tests < 0) {
+            this.logger.error('Please specify valid number of tasks and tests!');
+        } else {
+            this.generateDirectory();
         }
-        for(let j = 1; j <= tests; j++) {
-            if(overwrite || !existsSync('tests/' + a + j + '.in')) {
-                writeFileSync('tests/' + a + j + '.in', '');
-                console.log('Created file:', 'tests/' + a + j + '.in');
-            }
-            if(overwrite || !existsSync('tests/' + a + j + '.out')) {
-                writeFileSync('tests/' + a + j + '.out', '');
-                console.log('Created file:', 'tests/' + a + j + '.out');
+    }
+
+    generateTests(): void {
+        for (let t = 0; t < this.tasks; t++) {
+            for (let i = 0; i < this.tests; i++) {
+                var inPath = './tests/' + String.fromCharCode(97 + t) + i + '.in';
+                var outPath = './tests/' + String.fromCharCode(97 + t) + i + '.out';
+
+                if(this.overwrite || !existsSync(inPath)) {
+                    writeFile(inPath, '', this.logger.callback('Created file: ' + inPath));
+                }
+
+                if(this.overwrite || !existsSync(outPath)) {
+                    writeFile(outPath, '', this.logger.callback('Created file: ' + outPath));
+                }
             }
         }
-        a = String.fromCharCode(a.charCodeAt(0) + 1);
     }
-}
 
-export function init(args: minimist.ParsedArgs) {
-    const tasks: number = args.tasks;
-    const tests: number = args.tests;
-    if(tasks < 0 || tests < 0) {
-        console.error('Please specify valid number of tasks and tests!');
-    } else {
-        generateDirectory(tasks, tests, args.overwrite);
+    generateDirectory(): void {
+
+        exists('./tests', (exists) => {
+            if(!exists) {
+                mkdir('./tests', (err) => {
+                    if(err) {
+                        this.logger.error(err.message);
+                    } else {
+                        this.logger.log("Created directory: ./tests");
+                        this.generateTests();
+                    }
+                });
+            } else {
+                this.generateTests();
+            }
+        });
+
+        for (let i = 0; i < this.tasks; i++) {
+            var a = './' + String.fromCharCode(97 + i) + '.cpp';
+            if(this.overwrite || !existsSync(a)) {
+                writeFile(a, this.sampleProgram, this.logger.callback('Created file: ' + a));
+            }
+        }
     }
-}
+}   
