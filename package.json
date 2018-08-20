@@ -24,7 +24,8 @@
   "homepage": "https://github.com/tao24/gcg#readme",
   "dependencies": {
     "clipboardy": "^1.2.3",
-    "minimist": "^1.2.0"
+    "minimist": "^1.2.0",
+    "ncp": "^2.0.0"
   },
   "devDependencies": {
     "@types/clipboardy": "^1.1.0",
