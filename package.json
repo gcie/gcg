@@ -23,9 +23,11 @@
   },
   "homepage": "https://github.com/tao24/gcg#readme",
   "dependencies": {
+    "clipboardy": "^1.2.3",
     "minimist": "^1.2.0"
   },
   "devDependencies": {
+    "@types/clipboardy": "^1.1.0",
     "@types/minimist": "^1.2.0",
     "@types/node": "^10.5.7",
     "typescript": "^3.0.1"

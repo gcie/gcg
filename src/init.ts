@@ -1,5 +1,5 @@
-import minimist from 'minimist';
-import { readFileSync, exists, mkdir, writeFile, existsSync } from 'fs';
+import { exists, existsSync, mkdir, readFileSync, writeFile } from 'fs';
+import { ParsedArgs } from 'minimist';
 import { Logger } from './logger';
 
 export class Initializer {
@@ -9,14 +9,14 @@ export class Initializer {
     private overwrite: boolean;
     private sampleProgram = readFileSync(__dirname + '/../res/template.cpp');
 
-    constructor(private args: minimist.ParsedArgs) { 
+    constructor(private args: ParsedArgs) { 
         this.logger = new Logger(args);
         this.tasks = +args.tasks;
         this.tests = +args.tests;
         this.overwrite = args.overwrite;
     }
 
-    init(): void {
+    start(): void {
         if(this.tasks < 0 || this.tests < 0) {
             this.logger.error('Please specify valid number of tasks and tests!');
         } else {

@@ -1,8 +1,8 @@
-import minimist from 'minimist';
+import { ParsedArgs } from 'minimist';
 
 export class Logger {
 
-    constructor(private args: minimist.ParsedArgs) { }
+    constructor(private args: ParsedArgs) { }
     
     log(...messages: string[]) {
         if(this.args.log) {

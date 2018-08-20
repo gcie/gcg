@@ -1,8 +1,8 @@
 import { execFile } from 'child_process';
-import { readFileSync, createReadStream, readdir } from 'fs';
-import minimist from 'minimist';
+import { createReadStream, readdir, readFileSync } from 'fs';
+import { ParsedArgs } from 'minimist';
 
-export function validate(args: minimist.ParsedArgs): void {
+export function validate(args: ParsedArgs): void {
 
 }
 

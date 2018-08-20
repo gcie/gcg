@@ -1,5 +1,5 @@
-import minimist from 'minimist';
+import { ParsedArgs } from 'minimist';
 
-export function input(args: minimist.ParsedArgs): void {
+export function input(args: ParsedArgs): void {
     
 }
