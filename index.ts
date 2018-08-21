@@ -9,20 +9,24 @@ const args: minimist.ParsedArgs = minimist(process.argv.slice(2), {
     default: { 
         compile: true,
         log: true,
+        interactive: true,
         tasks: 5,
         tests: 2 
     }
 });
 
-if(args._[0] === 'init' || args['init']) {
-    const initializer = new Initializer(args);
-    initializer.start();
-} else if(args._[0] && args._[0].length == 1) {
+if(args._[0] === 'init' || args._[0] === 'i') {
+    if(args.interactive) {
+        const interactive = new Interactive(args);
+        interactive.start();
+    } else {
+        const initializer = new Initializer(args);
+        initializer.start();
+    }
+} else if(args._[0] === 'run' || args._[0] === 'r') {
     const validator = new Validator(args);
     validator.start();
 } else {
-    const interactive = new Interactive(args);
-    interactive.start();
 }
 
 

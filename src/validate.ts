@@ -8,7 +8,7 @@ export class Validator {
     sourcePath: string;
 
     constructor(private args: ParsedArgs) {
-        this.programName = args._[0];
+        this.programName = args._[1];
         this.sourcePath = this.programName + '.cpp';
         this.programPath = './' + this.programName;
     }
@@ -18,7 +18,7 @@ export class Validator {
             console.error("\x1b[31m%s\x1b[0m%s", 'ERROR:', "Could not find file: " + this.sourcePath);
             process.exit();
         }
-        if(!this.args.no_compile) {
+        if(this.args.compile) {
             execFile('g++', 
                 ['-std=c++17', this.sourcePath,  '-o', this.programName], (error: Error | null, stdout: string, stderr: string) => {
                     if(error) {
@@ -44,25 +44,25 @@ export class Validator {
             }
             items.forEach(item => {
                 if(item.endsWith('.in') && item.startsWith(this.programName)) {
-                    this.validateProgram(this.programPath, 'tests/' + item, 'tests/' + item.replace(/\.[^/.]+$/, "") + '.out');
+                    this.validateProgram(item.replace(/\.[^/.]+$/, ""), 'tests/' + item, 'tests/' + item.replace(/\.[^/.]+$/, "") + '.out');
                 }
             });
         });
     }
 
-    validateProgram(programPath: string, inputPath: string, outputPath: string) {
-        var child = execFile(programPath, (error, stdout, stderr) => {
+    validateProgram(testName: string, inputPath: string, outputPath: string) {
+        var child = execFile(this.programPath, (error, stdout, stderr) => {
             if (error) {
                 console.error("\x1b[31m%s\x1b[0m %s", 'ERROR:', stderr ? stderr : "Could not execute file: " + this.programPath);
                 return;
             }
             const out = readFileSync(outputPath);
             if(stdout.trim() == out.toString().trim()) {
-                console.log("\x1b[32m%s\x1b[0m", "SUCCESS");
+                console.log("\x1b[33mTest %s:\x1b[0m \x1b[32m%s\x1b[0m", testName, "SUCCESS");
             } else {
-                console.log("\x1b[31m%s\x1b[0m", "INVALID ANSWER:");
-                console.log(" Expected:\n", out.toString());
-                console.log(' Got:     \n', stdout);
+                console.log("\x1b[33mTest %s:\x1b[0m \x1b[31m%s\x1b[0m", testName, "INVALID ANSWER");
+                console.log("\x1b[33m### Expected:\x1b[0m\n%s", out.toString().trim());
+                console.log('\x1b[33m### Got:     \x1b[0m\n%s', stdout.trim());
             }
         });
         
