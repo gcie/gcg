@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Codeforces project generator
 
 **Warning:** This is a dev version, might be unstable or have errors.
@@ -51,3 +52,29 @@ gcg run <task-name> [--no-compile]
 Runs specified task on its tests (any test that begins with ```<task-name>```). Flag ```--no-compile``` turns off compiling.
 
 **Note**: Validator runs ```g++ -std=c++17 <task-name>.cpp -o <task-name>```. Make sure it works.
+=======
+# Generator projektu
+
+## Instalacja
+
+```
+npm install -g https://github.com/tao24/gcg.git
+```
+
+## Instrukcja obsługi
+```
+gcg --init
+```
+Generuje szablonowe pliki ```.cpp``` oraz przygotowuje testy w folderze ```tests```.
+
+```
+gcg <nazwa_programu> [--no-compile]
+```
+
+Kompiluje i testuje program ```<nazwa-programu>.cpp``` na testach: ```tests\<nazwa-programu>*.in```, a wyniki
+
+
+**Uwaga**: ```<nazwa_progamu>``` powinna być bez rozszerzenia.
+
+Flaga ```--no-compile``` wyłącza kompilowanie.
+>>>>>>> master
