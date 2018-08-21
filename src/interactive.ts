@@ -13,7 +13,7 @@ export class Interactive {
     private input?: string;
     private clipContent?: string;
     private listen: boolean = true;
-    private sampleProgram = readFileSync(__dirname + '/../res/template.cpp');
+    private sampleProgram = readFileSync(__dirname + '/../res/templates/main.cpp');
 
     constructor(private args: ParsedArgs) {
         this.logger = new Logger(args);
@@ -22,6 +22,7 @@ export class Interactive {
     start(): void {
         if(this.args._[1]) { // Single task mode
             console.log(`Copy tests or type 'q' to quit`);
+            
             clip.writeSync(""); // reset clipboard
             this.clipContent = clip.readSync();
             this.listenClipboard();

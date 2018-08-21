@@ -7,7 +7,7 @@ export class Initializer {
     private tasks: number;
     private tests: number;
     private overwrite: boolean;
-    private sampleProgram = readFileSync(__dirname + '/../res/template.cpp');
+    private sampleProgram = readFileSync(__dirname + '/../res/templates/main.cpp');
 
     constructor(private args: ParsedArgs) { 
         this.logger = new Logger(args);

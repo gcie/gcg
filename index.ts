@@ -1,11 +1,12 @@
 #!/usr/bin/env node
 
-import minimist from 'minimist';
+import minimist, { ParsedArgs } from 'minimist';
 import { Initializer } from './src/init';
 import { Validator } from './src/validate';
 import { Interactive } from './src/interactive';
+import { readFile } from 'fs';
 
-const args: minimist.ParsedArgs = minimist(process.argv.slice(2), {
+const args: ParsedArgs = minimist(process.argv.slice(2), {
     default: { 
         compile: true,
         log: true,
@@ -26,7 +27,10 @@ if(args._[0] === 'init' || args._[0] === 'i') {
 } else if(args._[0] === 'run' || args._[0] === 'r') {
     const validator = new Validator(args);
     validator.start();
-} else {
+} else if(args._[0] === 'help' || args._[0] === 'h' || !args._[0]){
+    readFile('./res/help', (err, data) => {
+        console.log(data.toString());
+    });
 }
 
 
