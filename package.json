@@ -25,7 +25,8 @@
   "dependencies": {
     "clipboardy": "^1.2.3",
     "minimist": "^1.2.0",
-    "ncp": "^2.0.0"
+    "ncp": "^2.0.0",
+    "stream": "0.0.2"
   },
   "devDependencies": {
     "@types/clipboardy": "^1.1.0",

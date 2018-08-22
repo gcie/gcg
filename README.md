@@ -37,10 +37,12 @@ npm run build:prod
 
 ### Directory management
 ```
-gcg init [task-name] [--overwrite]
+gcg init [task-name] [--overwrite] [--input-only]
 ```
 
 Initializes directory with template ```.cpp``` files and tests (you should start copying tests to clipboard). If [task-name] is specified, then it only initializes this task.
+
+Flag ```--input-only``` [TODO] makes it so it creates only ```*.in``` files, omitting ```.*.out``` files, and creates sample ```[task-name]_out.cpp``` validator file. Make sure to create and compile validator.
 
 ### Testing
 
@@ -48,6 +50,13 @@ Initializes directory with template ```.cpp``` files and tests (you should start
 gcg run <task-name> [--no-compile]
 ```
 
-Runs specified task on its tests (any test that begins with ```<task-name>```). Flag ```--no-compile``` turns off compiling.
+Runs specified task on its tests (any test that begins with ```<task-name>```). If no corresponding `.out` files are found, then it tries to use `<task-name>_out[.exe]` executable to validate program. Validator should work as follows:
 
-**Note**: Validator runs ```g++ -std=c++17 <task-name>.cpp -o <task-name>```. Make sure it works.
+1. read from stdin test specification (`.in` file)
+2. read from stdin your programs' output
+3. validate output
+4. if result is ok, return with no result. If not, it should print something on standard output (it will be displayed in console during testing). 
+
+Flag ```--no-compile``` turns off compiling.
+
+**Note**: Validator runs ```g++ -std=c++17 <task-name>.cpp -o <task-name>```. Make sure you have c++ compiler.

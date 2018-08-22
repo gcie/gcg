@@ -4,7 +4,7 @@ import { Logger } from "./logger";
 import { existsSync, readFileSync, writeFile, writeFileSync, mkdirSync } from "fs";
 
 class Test {
-    constructor(public input: string, public output: string) { }
+    constructor(public input: string, public output?: string) { }
 }
 
 export class Interactive {
@@ -73,8 +73,8 @@ export class Interactive {
         }
         var testc = 1;
         this.tests.forEach(test => {
-            var inPath = './tests/' + name + testc + '.in';
-            var outPath = './tests/' + name + testc + '.out';
+            var inPath = './tests/' + name + '_' + testc + '.in';
+            var outPath = './tests/' + name + '_' + testc + '.out';
             testc++;
 
             if(this.args.overwrite || !existsSync(inPath)) {
@@ -93,11 +93,15 @@ export class Interactive {
     listenClipboard() {
         let newClip: string | undefined = clip.readSync();
         if (newClip != this.clipContent) {
-            if(this.input) {
-                this.tests.push({input: this.input, output: newClip});
-                this.input = undefined;
+            if(this.args.input_only) {
+                this.tests.push({input: newClip, output: undefined});
             } else {
-                this.input = newClip;
+                if(this.input) {
+                    this.tests.push({input: this.input, output: newClip});
+                    this.input = undefined;
+                } else {
+                    this.input = newClip;
+                }
             }
             this.clipContent = newClip;
         }

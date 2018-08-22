@@ -1,6 +1,7 @@
 import { execFile } from 'child_process';
-import { createReadStream, readdir, readFileSync, existsSync } from 'fs';
+import { createReadStream, readdir, readFileSync, existsSync, exists } from 'fs';
 import { ParsedArgs } from 'minimist';
+import { Readable } from 'stream';
 
 export class Validator {
     programName: string;
@@ -44,25 +45,52 @@ export class Validator {
             }
             items.forEach(item => {
                 if(item.endsWith('.in') && item.startsWith(this.programName)) {
-                    this.validateProgram(item.replace(/\.[^/.]+$/, ""), 'tests/' + item, 'tests/' + item.replace(/\.[^/.]+$/, "") + '.out');
+                    this.validateProgram(item.replace(/\.[^/.]+$/, ""), 'tests/' + item);
                 }
             });
         });
     }
 
-    validateProgram(testName: string, inputPath: string, outputPath: string) {
+    validateProgram(testName: string, inputPath: string) {
+
         var child = execFile(this.programPath, (error, stdout, stderr) => {
             if (error) {
-                console.error("\x1b[31m%s\x1b[0m %s", 'ERROR:', stderr ? stderr : "Could not execute file: " + this.programPath);
+                console.error("\x1b[31m%s\x1b[0m %s", 'ERROR:', stderr ? stderr : `Could not execute file: ${this.programPath}`);
                 return;
             }
-            const out = readFileSync(outputPath);
-            if(stdout.trim() == out.toString().trim()) {
-                console.log("\x1b[33mTest %s:\x1b[0m \x1b[32m%s\x1b[0m", testName, "SUCCESS");
+            const testTxtName = testName + '.out'
+            const testTxtPath = './tests/' + testTxtName;
+            const testValName = this.programName + '_out';
+            const testValPath = './tests/' + testValName;
+
+            if(existsSync(testTxtPath)) {
+                var destout = readFileSync(testTxtPath).toString();
+                if(stdout.trim() == destout.trim()) {
+                    console.log("\x1b[33mTest %s:\x1b[0m \x1b[32m%s\x1b[0m", testName, "SUCCESS");
+                } else {
+                    console.log("\x1b[33mTest %s:\x1b[0m \x1b[31m%s\x1b[0m\n\x1b[33m### Expected:\x1b[0m\n%s\n\x1b[33m### Got:     \x1b[0m\n%s", testName, "INVALID ANSWER", destout.trim(), stdout.trim());
+                }
+            } else if(true /* existsSync(testValPath + '.exe') */) {
+                var validator = execFile(testValPath, (error, stdout, stderr) => {
+                    if (error) {
+                        console.error("\x1b[31m%s\x1b[0m %s", 'ERROR:', stderr ? stderr : `Could not execute file: ${testValPath}`);
+                        return;
+                    }
+                    if(stdout.trim() == '') {
+                        console.log("\x1b[33mTest %s:\x1b[0m \x1b[32m%s\x1b[0m", testName, "SUCCESS");
+                    } else {
+                        console.log("\x1b[33mTest %s:\x1b[0m \x1b[31m%s\x1b[0m\n\x1b[33m### Checker result: \x1b[0m%s", testName, "INVALID ANSWER", stdout.trim());
+                    }
+                });
+                const valStream = new Readable();
+                valStream._read = () => {};
+                valStream.push(readFileSync(inputPath).toString());
+                valStream.push(' ');
+                valStream.push(stdout);
+                valStream.push(null);
+                valStream.pipe(validator.stdin);
             } else {
-                console.log("\x1b[33mTest %s:\x1b[0m \x1b[31m%s\x1b[0m", testName, "INVALID ANSWER");
-                console.log("\x1b[33m### Expected:\x1b[0m\n%s", out.toString().trim());
-                console.log('\x1b[33m### Got:     \x1b[0m\n%s', stdout.trim());
+                console.error("\x1b[31m%s\x1b[0m %s", 'ERROR:', `There is no "${testTxtName}" file and no "${testValName}" validator in "tests" folder.`);
             }
         });
         
