@@ -3,13 +3,12 @@
 **Warning:** This is a dev version - it might be unstable or have errors, because it has not been tested properly. Feel free to test it yourself and report errors.
 
 ## Instalation
----
 ```
 npm install -g https://github.com/tao24/gcg.git#dev
 ```
 
 ## Usage instruction
----
+
 ### Directory management
 ```
 gcg init <task-name> [--overwrite] [--input-only]
@@ -42,7 +41,7 @@ If no corresponding `.out` or `.ans` files are found, then it tries to use `<tas
 
 
 ## Local building and testing
----
+
 1. Clone repository:
 
 ```
