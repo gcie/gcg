@@ -37,3 +37,6 @@ else if (args._[0] === 'help' || args._[0] === 'h' || !args._[0]) {
         console.log(data.toString());
     });
 }
+else {
+    console.log(`Unknown command. Type 'gcg help' to get help, or visit 'https://github.com/tao24/gcg' for examples.`);
+}

@@ -72,8 +72,8 @@ class Interactive {
         }
         var testc = 1;
         this.tests.forEach(test => {
-            var inPath = './tests/' + name + testc + '.in';
-            var outPath = './tests/' + name + testc + '.out';
+            var inPath = './tests/' + name + '_' + testc + '.in';
+            var outPath = './tests/' + name + '_' + testc + '.out';
             testc++;
             if (this.args.overwrite || !fs_1.existsSync(inPath)) {
                 fs_1.writeFileSync(inPath, test.input);
@@ -88,12 +88,17 @@ class Interactive {
     listenClipboard() {
         let newClip = clipboardy_1.default.readSync();
         if (newClip != this.clipContent) {
-            if (this.input) {
-                this.tests.push({ input: this.input, output: newClip });
-                this.input = undefined;
+            if (this.args['input-only']) {
+                this.tests.push({ input: newClip, output: undefined });
             }
             else {
-                this.input = newClip;
+                if (this.input) {
+                    this.tests.push({ input: this.input, output: newClip });
+                    this.input = undefined;
+                }
+                else {
+                    this.input = newClip;
+                }
             }
             this.clipContent = newClip;
         }

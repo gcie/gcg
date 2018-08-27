@@ -93,7 +93,7 @@ export class Interactive {
     listenClipboard() {
         let newClip: string | undefined = clip.readSync();
         if (newClip != this.clipContent) {
-            if(this.args.input_only) {
+            if(this.args['input-only']) {
                 this.tests.push({input: newClip, output: undefined});
             } else {
                 if(this.input) {

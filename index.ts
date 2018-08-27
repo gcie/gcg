@@ -12,7 +12,7 @@ const args: ParsedArgs = minimist(process.argv.slice(2), {
         log: true,
         interactive: true,
         tasks: 5,
-        tests: 2 
+        tests: 2
     }
 });
 
@@ -31,6 +31,8 @@ if(args._[0] === 'init' || args._[0] === 'i') {
     readFile('./res/help', (err, data) => {
         console.log(data.toString());
     });
+} else {
+    console.log(`Unknown command. Type 'gcg help' to get help, or visit 'https://github.com/tao24/gcg' for examples.`)
 }
 
 
