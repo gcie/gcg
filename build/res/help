@@ -1,0 +1,18 @@
+gcg - Codeforces' contest file structure generator.
+
+Usage:
+    gcg init <task-name>        initialize tasks, or specified task by clipping tests
+    gcg run <task-name>         compile and run task on tests in folder 'tests'
+    gcg help                    print this text
+
+Flags and parameters:
+    r, run:
+        -t <test-name>          run program on specified test
+        -f <folder-name>        run program on all tests in folder <folder-name>
+        --no-compile            disable compilation before running tests
+    i, init:
+        --overwrite             overwrite existing files
+        --no-interactive        create <n> tasks and <m> blank tests for each task, where:
+            --tasks <m>          
+            --tests <n>          
+        --no-log                disable logging
