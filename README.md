@@ -1,10 +1,8 @@
 # Codeforces project generator
 
-**Warning:** This is a dev version - it might be unstable or have errors, because it has not been tested properly. Feel free to test it yourself and report errors.
-
 ## Instalation
 ```
-npm install -g https://github.com/tao24/gcg.git#dev
+npm install -g https://github.com/tao24/gcg.git
 ```
 
 ## Usage instruction
