@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 class Logger {
-    constructor(args) {
-        this.args = args;
+    constructor(silent) {
+        this.silent = silent;
     }
     log(...messages) {
-        if (this.args.log) {
+        if (!this.silent) {
             console.log(...messages);
         }
     }

@@ -1,15 +1,15 @@
 {
   "name": "gcg",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "description": "Codeforces contest helper",
-  "main": "index.js",
+  "main": "build/index.js",
+  "module": "build/index.js",
   "bin": {
-    "gcg": "./app/index.js"
+    "gcg": "./bin/gcg"
   },
   "scripts": {
-    "build": "tsc && ncp ./res ./dist/res",
-    "build:prod": "tsc --outDir ./app --sourceMap false && ncp ./res ./app/res",
-    "start": "node ./dist/index.js",
+    "build": "tsc -p tsconfig.json && ncp ./res ./build/res",
+    "start": "node ./bin/gcg",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -23,14 +23,15 @@
   },
   "homepage": "https://github.com/tao24/gcg#readme",
   "dependencies": {
+    "chalk": "^2.4.1",
     "clipboardy": "^1.2.3",
-    "minimist": "^1.2.0",
+    "commander": "^2.19.0",
     "ncp": "^2.0.0"
   },
   "devDependencies": {
     "@types/clipboardy": "^1.1.0",
-    "@types/minimist": "^1.2.0",
+    "@types/commander": "^2.12.2",
     "@types/node": "^10.5.7",
-    "typescript": "^3.0.1"
+    "typescript": "^3.1.6"
   }
 }
