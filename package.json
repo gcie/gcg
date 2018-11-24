@@ -8,7 +8,7 @@
     "gcg": "./bin/gcg"
   },
   "scripts": {
-    "build": "tsc && ncp ./res ./build/res",
+    "build": "tsc -p tsconfig.json && ncp ./res ./build/res",
     "start": "node ./bin/gcg",
     "postinstall": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
