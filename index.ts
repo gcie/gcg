@@ -1,38 +1,44 @@
 #!/usr/bin/env node
 
-import minimist, { ParsedArgs } from 'minimist';
-import { Initializer } from './src/init';
+import commander from 'commander';
+import { Initializer } from './src/initializer';
 import { Validator } from './src/validate';
-import { Interactive } from './src/interactive';
-import { readFile } from 'fs';
 
-const args: ParsedArgs = minimist(process.argv.slice(2), {
-    default: { 
-        compile: true,
-        log: true,
-        interactive: true,
-        tasks: 5,
-        tests: 2
-    }
-});
+commander.version('2.1.0', '-v, --version')
+    // .option('--overwrite', 'overwrite existing files')
 
-if(args._[0] === 'init' || args._[0] === 'i') {
-    if(args.interactive) {
-        const interactive = new Interactive(args);
+
+commander
+    .command('init <task>')
+    .alias('i')
+    .description('initialize task')
+    .option('-o, --overwrite', 'overwrite existing files')
+    .option('-i, --input-only', 'only create .in tests, skip .out')
+    .option('-s, --slient', 'run silenty (no logging)')
+    .action((task, cmd) => {
+        const interactive = new Initializer(cmd, task);
         interactive.start();
-    } else {
-        const initializer = new Initializer(args);
-        initializer.start();
-    }
-} else if(args._[0] === 'run' || args._[0] === 'r') {
-    const validator = new Validator(args);
-    validator.start();
-} else if(args._[0] === 'help' || args._[0] === 'h' || !args._[0]){
-    readFile('./res/help', (err, data) => {
-        console.log(data.toString());
     });
-} else {
-    console.log(`Unknown command. Type 'gcg help' to get help, or visit 'https://github.com/tao24/gcg' for examples.`)
-}
+    
+commander
+    .command('run <task>')
+    .alias('r')
+    .description('run task on it\'s tests. if no custom folder or test are specified, it runs on all tests in \'tests\' directory that start with <task> and on all tests in \'tests\\<task>\' directory.')
+    .option('--no-compile', 'disable compiling before running on tests')
+    .option('-f, --folder <folder>', 'set test folder path. defaults to \'tests\\<task>\'')
+    .option('-t, --test <testname>', 'run on chosen test only')
+    .action((task, cmd) => {
+        const validator = new Validator(cmd, task);
+        validator.start();
+    });
+
+commander
+    .on('command:*', function () {
+        console.error('Invalid command: %s\nSee --help for a list of available commands.', commander.args.join(' '));
+        process.exit(1);
+    });
+
+commander
+    .parse(process.argv);
 
 

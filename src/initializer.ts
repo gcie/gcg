@@ -1,13 +1,13 @@
-import { ParsedArgs } from "minimist";
 import clip from "clipboardy";
+import { CommanderStatic } from "commander";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { Logger } from "./logger";
-import { existsSync, readFileSync, writeFile, writeFileSync, mkdirSync } from "fs";
 
 class Test {
     constructor(public input: string, public output?: string) { }
 }
 
-export class Interactive {
+export class Initializer {
     private logger: Logger;
     private tests: Array<Test> = [];
     private input?: string;
@@ -15,12 +15,12 @@ export class Interactive {
     private listen: boolean = true;
     private sampleProgram = readFileSync(__dirname + '/../res/templates/main.cpp');
 
-    constructor(private args: ParsedArgs) {
-        this.logger = new Logger(args);
+    constructor(private commander: CommanderStatic, private taskname: string) {
+        this.logger = new Logger(commander.log);
     }
 
     start(): void {
-        if(this.args._[1]) { // Single task mode
+        // if(this.args._[1]) { // Single task mode
             console.log(`Copy tests or type 'q' to quit`);
             
             clip.writeSync(""); // reset clipboard
@@ -29,15 +29,14 @@ export class Interactive {
 
             process.stdin.addListener("data", (data: Buffer) => {
                 if (data.toString()[0] == 'q') {
-                    this.createTask(this.args._[1]);
+                    this.createTask();
                     this.tests = [];
                     process.exit(0);
                 } else {
                     console.log(`Copy tests or type 'q' to quit.`);
                 }
             });
-
-        } else { // Multiple tasks mode
+/*      } else { // Multiple tasks mode
             console.log(`Copy tests or type 's' to skip to next task. Type 'q' to quit.`);
             var taskc = 0;
     
@@ -58,12 +57,12 @@ export class Interactive {
                     console.log(`Copy tests or type 's' to skip to next task. Type 'q' to quit.`);
                 }
             });
-        }
+        } */
     }
 
-    createTask(name: string) {
-        const filename = './' + name + '.cpp';
-        if(this.args.overwrite || !existsSync(filename)) {
+    createTask() {
+        const filename = './' + this.taskname + '.cpp';
+        if(this.commander.overwrite || !existsSync(filename)) {
             writeFileSync(filename, this.sampleProgram);
             this.logger.log('Created file:', filename);
         }
@@ -71,18 +70,22 @@ export class Interactive {
             mkdirSync('./tests');
             this.logger.log("Created directory: ./tests");
         }
+        if(!existsSync('./tests/' + this.taskname)) {
+            mkdirSync('./tests/' + this.taskname);
+            this.logger.log("Created directory: ./tests/" + this.taskname);
+        }
         var testc = 1;
         this.tests.forEach(test => {
-            var inPath = './tests/' + name + '_' + testc + '.in';
-            var outPath = './tests/' + name + '_' + testc + '.out';
+            var inPath = './tests/' + this.taskname + '/' + this.taskname + testc + '.in';
+            var outPath = './tests/' + this.taskname + '/' + this.taskname + testc + '.out';
             testc++;
 
-            if(this.args.overwrite || !existsSync(inPath)) {
+            if(this.commander.overwrite || !existsSync(inPath)) {
                 writeFileSync(inPath, test.input);
                 this.logger.log('Created file:', inPath)
             }
 
-            if(this.args.overwrite || !existsSync(outPath)) {
+            if(test.output && (this.commander.overwrite || !existsSync(outPath))) {
                 writeFileSync(outPath, test.output);
                 this.logger.log('Created file:', outPath)
             }
@@ -93,7 +96,7 @@ export class Interactive {
     listenClipboard() {
         let newClip: string | undefined = clip.readSync();
         if (newClip != this.clipContent) {
-            if(this.args['input-only']) {
+            if(this.commander.inputOnly) {
                 this.tests.push({input: newClip, output: undefined});
             } else {
                 if(this.input) {

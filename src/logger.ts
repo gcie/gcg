@@ -1,11 +1,9 @@
-import { ParsedArgs } from 'minimist';
-
 export class Logger {
 
-    constructor(private args: ParsedArgs) { }
+    constructor(private silent: boolean) { }
     
     log(...messages: string[]) {
-        if(this.args.log) {
+        if(!this.silent) {
             console.log(...messages);
         }
     }
