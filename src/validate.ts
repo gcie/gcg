@@ -123,7 +123,7 @@ export class Validator {
                     console.log(chalk.yellow(`Test ${testName}:`), chalk.red('INVALID ANSWER'), chalk.yellow('\n### Expected:'), `\n${destout.trim()}`, chalk.yellow('\n### Got:'), `\n${stdout.trim()}`);
                     this.failures++;
                 }
-            } else if(existsSync(testValPath + '.exe')) {
+            } else if(existsSync(testValPath + '.exe') || existsSync(testValPath)) {
                 var validator = execFile(testValPath, (error, stdout, stderr) => {
                     if (error) {
                         console.error(chalk.yellow(`Test ${testName}:`), chalk.red('ERROR:'), stderr ? stderr : `Could not execute file: ${testValPath}`);
