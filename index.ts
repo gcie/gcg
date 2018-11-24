@@ -4,7 +4,7 @@ import commander from 'commander';
 import { Initializer } from './src/initializer';
 import { Validator } from './src/validate';
 
-commander.version('2.1.0', '-v, --version')
+commander.version('2.1.1', '-v, --version')
     // .option('--overwrite', 'overwrite existing files')
 
 
