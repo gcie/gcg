@@ -2,14 +2,13 @@
   "name": "gcg",
   "version": "2.1.1",
   "description": "Codeforces contest helper",
-  "main": "index.js",
+  "main": "index.ts",
   "bin": {
-    "gcg": "./dist/index.js"
+    "gcg": "./bin/gcg"
   },
   "scripts": {
-    "build": "tsc --sourceMap false && ncp ./res ./dist/res",
+    "build": "tsc && ncp ./res ./build/res",
     "start": "ts-node -- index.ts",
-    "postinstall": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
