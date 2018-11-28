@@ -125,7 +125,7 @@ class Validator {
                     this.failures++;
                 }
             }
-            else if (fs_1.existsSync(testValPath + '.exe')) {
+            else if (fs_1.existsSync(testValPath + '.exe') || fs_1.existsSync(testValPath)) {
                 var validator = child_process_1.execFile(testValPath, (error, stdout, stderr) => {
                     if (error) {
                         console.error(chalk_1.default.yellow(`Test ${testName}:`), chalk_1.default.red('ERROR:'), stderr ? stderr : `Could not execute file: ${testValPath}`);
