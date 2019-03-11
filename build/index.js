@@ -29,6 +29,8 @@ commander_1.default
     validator.start();
 });
 commander_1.default
+    .command('add');
+commander_1.default
     .on('command:*', function () {
     console.error('Invalid command: %s\nSee --help for a list of available commands.', commander_1.default.args.join(' '));
     process.exit(1);

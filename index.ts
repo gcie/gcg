@@ -1,14 +1,14 @@
 #!/usr/bin/env node
 
-import commander from 'commander';
+import gcg from 'commander';
 import { Initializer } from './src/initializer';
 import { Validator } from './src/validate';
 
-commander.version('2.1.1', '-v, --version')
+gcg.version('2.1.1', '-v, --version')
     // .option('--overwrite', 'overwrite existing files')
 
 
-commander
+gcg
     .command('init <task>')
     .description('initialize task')
     .option('-o, --overwrite', 'overwrite existing files')
@@ -19,7 +19,7 @@ commander
         interactive.start();
     });
     
-commander
+gcg
     .command('run <task>')
     .description('run task on it\'s tests. if no custom folder or test are specified, it runs on all tests in \'tests\' directory that start with <task> and on all tests in \'tests\\<task>\' directory.')
     .option('--no-compile', 'disable compiling before running on tests')
@@ -30,13 +30,16 @@ commander
         validator.start();
     });
 
-commander
+gcg
+    .command('add')
+
+gcg
     .on('command:*', function () {
-        console.error('Invalid command: %s\nSee --help for a list of available commands.', commander.args.join(' '));
+        console.error('Invalid command: %s\nSee --help for a list of available commands.', gcg.args.join(' '));
         process.exit(1);
     });
 
-commander
+gcg
     .parse(process.argv);
 
 
