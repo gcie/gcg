@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import gcg from 'commander';
+import { codeforcesInit } from './src/codeforcesInit';
 import { Initializer } from './src/initializer';
 import { Validator } from './src/validate';
 
@@ -25,10 +26,17 @@ gcg
     .option('--no-compile', 'disable compiling before running on tests')
     .option('-f, --folder <folder>', 'set test folder path. defaults to \'tests\\<task>\'')
     .option('-t, --test <testname>', 'run on chosen test only')
+    .option('-std', 'c++ standard for compiler. Defaults to c++17', 'c++17')
     .action((task, cmd) => {
         const validator = new Validator(cmd, task);
         validator.start();
     });
+
+
+gcg
+    .command('cf <id>')
+    .description('prepare folder for Codeforces\'s contest with specified id')
+    .action(codeforcesInit);
 
 gcg
     .command('add')

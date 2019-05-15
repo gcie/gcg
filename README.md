@@ -18,6 +18,12 @@ Initializes directory with template `.cpp` file and tests (you should start copy
 
 Flag `--input-only` makes it so it creates only `*.in` files, omitting `*.out` files. Make sure to create `[task-name]_out.exe` validator file working as specified below.
 
+```
+gcg cf <contest-td>
+```
+
+Initializes directory with template `.cpp` files and tests for codeforces' contest (with id equal to `<contest-id>`, as in URL on website).
+
 ### Testing
 
 ```

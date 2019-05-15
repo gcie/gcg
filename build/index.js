@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const commander_1 = __importDefault(require("commander"));
+const codeforcesInit_1 = require("./src/codeforcesInit");
 const initializer_1 = require("./src/initializer");
 const validate_1 = require("./src/validate");
 commander_1.default.version('2.1.1', '-v, --version');
@@ -24,10 +25,15 @@ commander_1.default
     .option('--no-compile', 'disable compiling before running on tests')
     .option('-f, --folder <folder>', 'set test folder path. defaults to \'tests\\<task>\'')
     .option('-t, --test <testname>', 'run on chosen test only')
+    .option('-std', 'c++ standard for compiler. Defaults to c++17', 'c++17')
     .action((task, cmd) => {
     const validator = new validate_1.Validator(cmd, task);
     validator.start();
 });
+commander_1.default
+    .command('cf <id>')
+    .description('prepare folder for Codeforces\'s contest with specified id')
+    .action(codeforcesInit_1.codeforcesInit);
 commander_1.default
     .command('add');
 commander_1.default

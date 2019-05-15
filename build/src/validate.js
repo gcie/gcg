@@ -7,6 +7,17 @@ const child_process_1 = require("child_process");
 const fs_1 = require("fs");
 const stream_1 = require("stream");
 const chalk_1 = __importDefault(require("chalk"));
+function run(task, cmd) {
+    const sourcePath = task + '.cpp';
+    const programPath = './' + task;
+    var successes = 0, failures = 0;
+    const taskTestsFolderPath = cmd.folder || `tests/${task}`;
+    if (!fs_1.existsSync(sourcePath)) {
+        console.error(chalk_1.default.red('ERROR:'), "Could not find file: " + sourcePath);
+        process.exit();
+    }
+}
+exports.run = run;
 class Validator {
     constructor(cmd, programName) {
         this.cmd = cmd;
@@ -114,7 +125,7 @@ class Validator {
             const testTxtPath = `${testPath}/${testName}${testOutExt}`;
             const testValName = this.programName + '_out';
             const testValPath = `${testPath}/${testValName}`;
-            const intro = chalk_1.default.gray('------------------------\n') + chalk_1.default.yellow(`Test ${testName}: `);
+            const intro = chalk_1.default.gray('------------------------\n') + chalk_1.default.yellow(`Test ${testName}:`);
             if (fs_1.existsSync(testTxtPath)) {
                 var destout = fs_1.readFileSync(testTxtPath).toString();
                 if (stdout.trim() == destout.trim()) {
