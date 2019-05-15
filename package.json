@@ -1,6 +1,6 @@
 {
   "name": "gcg",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Codeforces contest helper",
   "main": "build/index.js",
   "module": "build/index.js",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "build": "tsc -p tsconfig.json && ncp ./res ./build/res",
-    "start": "node ./bin/gcg",
+    "start": "ts-node index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -26,7 +26,9 @@
     "chalk": "^2.4.1",
     "clipboardy": "^1.2.3",
     "commander": "^2.19.0",
-    "ncp": "^2.0.0"
+    "ncp": "^2.0.0",
+    "node-html-parser": "^1.1.14",
+    "xmlhttprequest": "^1.8.0"
   },
   "devDependencies": {
     "@types/clipboardy": "^1.1.0",

@@ -1,6 +1,6 @@
 import { CommanderStatic } from 'commander';
 import { execFile } from 'child_process';
-import { createReadStream, readdir, readFileSync, existsSync, exists } from 'fs';
+import { createReadStream, readdir, readFileSync, existsSync } from 'fs';
 import { Readable } from 'stream';
 import chalk from 'chalk';
 
@@ -114,25 +114,26 @@ export class Validator {
             const testValName = this.programName + '_out';
             const testValPath = `${testPath}/${testValName}`;
 
+            const intro = chalk.gray('------------------------\n') + chalk.yellow(`Test ${testName}:`);
             if(existsSync(testTxtPath)) {
                 var destout = readFileSync(testTxtPath).toString();
                 if(stdout.trim() == destout.trim()) {
-                    console.log(chalk.yellow(`Test ${testName}:`), chalk.green('SUCCESS'));
+                    console.log(intro, chalk.green('SUCCESS'));
                     this.successes++;
                 } else {
-                    console.log(chalk.yellow(`Test ${testName}:`), chalk.red('INVALID ANSWER'), chalk.yellow('\n### Expected:'), `\n${destout.trim()}`, chalk.yellow('\n### Got:'), `\n${stdout.trim()}`);
+                    console.log(intro, chalk.red('INVALID ANSWER'), chalk.yellow('\nExpected:'), `\n${destout.trim()}`, chalk.yellow('\nGot:'), `\n${stdout.trim()}`);
                     this.failures++;
                 }
             } else if(existsSync(testValPath + '.exe') || existsSync(testValPath)) {
                 var validator = execFile(testValPath, (error, stdout, stderr) => {
                     if (error) {
-                        console.error(chalk.yellow(`Test ${testName}:`), chalk.red('ERROR:'), stderr ? stderr : `Could not execute file: ${testValPath}`);
+                        console.error(intro, chalk.red('ERROR:'), stderr ? stderr : `Could not execute file: ${testValPath}`);
                         this.failures++;
                     } else if(stdout.trim() == '') {
-                        console.log(chalk.yellow(`Test ${testName}:`), chalk.green('SUCCESS'));
+                        console.log(intro, chalk.green('SUCCESS'));
                         this.successes++;
                     } else {
-                        console.log(chalk.yellow(`Test ${testName}:`), chalk.red('INVALID ANSWER'), chalk.yellow('\n### Checker result:'), `\n${stdout.trim()}`);
+                        console.log(intro, chalk.red('INVALID ANSWER'), chalk.yellow('\nChecker result:'), `\n${stdout.trim()}`);
                         this.failures++;
                     }
                 });
@@ -144,7 +145,7 @@ export class Validator {
                 valStream.push(null);
                 valStream.pipe(validator.stdin);
             } else {
-                console.log(chalk.yellow(`Test ${testName}:`), chalk.blue('NO CHECKER'), chalk.yellow(`\n### Answer:`),  `\n${stdout.trim()}`);
+                console.log(intro, chalk.blue('NO CHECKER'), chalk.yellow(`\nAnswer:`),  `\n${stdout.trim()}`);
                 // console.error(`\x1b[31mERROR:\x1b[0m There is no '${testName}.out' or '${testName}.ans' file and no '${testValName}' validator in '${testPath}' folder.`);
             }
         });

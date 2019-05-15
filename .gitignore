@@ -5,3 +5,6 @@
 
 /*.cpp
 /*.exe
+
+.npmrc
+.vscode

@@ -7,6 +7,17 @@ const child_process_1 = require("child_process");
 const fs_1 = require("fs");
 const stream_1 = require("stream");
 const chalk_1 = __importDefault(require("chalk"));
+function run(task, cmd) {
+    const sourcePath = task + '.cpp';
+    const programPath = './' + task;
+    var successes = 0, failures = 0;
+    const taskTestsFolderPath = cmd.folder || `tests/${task}`;
+    if (!fs_1.existsSync(sourcePath)) {
+        console.error(chalk_1.default.red('ERROR:'), "Could not find file: " + sourcePath);
+        process.exit();
+    }
+}
+exports.run = run;
 class Validator {
     constructor(cmd, programName) {
         this.cmd = cmd;
@@ -114,29 +125,30 @@ class Validator {
             const testTxtPath = `${testPath}/${testName}${testOutExt}`;
             const testValName = this.programName + '_out';
             const testValPath = `${testPath}/${testValName}`;
+            const intro = chalk_1.default.gray('------------------------\n') + chalk_1.default.yellow(`Test ${testName}:`);
             if (fs_1.existsSync(testTxtPath)) {
                 var destout = fs_1.readFileSync(testTxtPath).toString();
                 if (stdout.trim() == destout.trim()) {
-                    console.log(chalk_1.default.yellow(`Test ${testName}:`), chalk_1.default.green('SUCCESS'));
+                    console.log(intro, chalk_1.default.green('SUCCESS'));
                     this.successes++;
                 }
                 else {
-                    console.log(chalk_1.default.yellow(`Test ${testName}:`), chalk_1.default.red('INVALID ANSWER'), chalk_1.default.yellow('\n### Expected:'), `\n${destout.trim()}`, chalk_1.default.yellow('\n### Got:'), `\n${stdout.trim()}`);
+                    console.log(intro, chalk_1.default.red('INVALID ANSWER'), chalk_1.default.yellow('\nExpected:'), `\n${destout.trim()}`, chalk_1.default.yellow('\nGot:'), `\n${stdout.trim()}`);
                     this.failures++;
                 }
             }
-            else if (fs_1.existsSync(testValPath + '.exe')) {
+            else if (fs_1.existsSync(testValPath + '.exe') || fs_1.existsSync(testValPath)) {
                 var validator = child_process_1.execFile(testValPath, (error, stdout, stderr) => {
                     if (error) {
-                        console.error(chalk_1.default.yellow(`Test ${testName}:`), chalk_1.default.red('ERROR:'), stderr ? stderr : `Could not execute file: ${testValPath}`);
+                        console.error(intro, chalk_1.default.red('ERROR:'), stderr ? stderr : `Could not execute file: ${testValPath}`);
                         this.failures++;
                     }
                     else if (stdout.trim() == '') {
-                        console.log(chalk_1.default.yellow(`Test ${testName}:`), chalk_1.default.green('SUCCESS'));
+                        console.log(intro, chalk_1.default.green('SUCCESS'));
                         this.successes++;
                     }
                     else {
-                        console.log(chalk_1.default.yellow(`Test ${testName}:`), chalk_1.default.red('INVALID ANSWER'), chalk_1.default.yellow('\n### Checker result:'), `\n${stdout.trim()}`);
+                        console.log(intro, chalk_1.default.red('INVALID ANSWER'), chalk_1.default.yellow('\nChecker result:'), `\n${stdout.trim()}`);
                         this.failures++;
                     }
                 });
@@ -149,7 +161,7 @@ class Validator {
                 valStream.pipe(validator.stdin);
             }
             else {
-                console.log(chalk_1.default.yellow(`Test ${testName}:`), chalk_1.default.blue('NO CHECKER'), chalk_1.default.yellow(`\n### Answer:`), `\n${stdout.trim()}`);
+                console.log(intro, chalk_1.default.blue('NO CHECKER'), chalk_1.default.yellow(`\nAnswer:`), `\n${stdout.trim()}`);
             }
         });
         const streamIn = fs_1.createReadStream(`${testPath}/${testName}.in`);
