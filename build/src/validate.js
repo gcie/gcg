@@ -33,7 +33,7 @@ class Validator {
             process.exit();
         }
         if (this.cmd.compile) {
-            child_process_1.execFile('g++', ['-std=c++17', this.sourcePath, '-o', this.programName], (error, stdout, stderr) => {
+            child_process_1.execFile('g++', [`-std=${this.cmd.std}`, this.sourcePath, '-o', this.programName], (error, stdout, stderr) => {
                 if (error) {
                     console.error(chalk_1.default.red("COMPILE ERROR:"), stderr);
                     process.exit();

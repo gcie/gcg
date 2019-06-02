@@ -4,7 +4,7 @@
 
 ## Instalation
 ```
-npm install -g https://github.com/tao24/gcg.git#dev
+npm install -g tao24/gcg#dev
 ```
 
 ## Usage instruction

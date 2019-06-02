@@ -4,6 +4,7 @@ import gcg from 'commander';
 import { codeforcesInit } from './src/codeforcesInit';
 import { Initializer } from './src/initializer';
 import { Validator } from './src/validate';
+import { codeforcesSetLogin } from './src/codeforcesLogin';
 
 gcg.version('2.1.1', '-v, --version')
     // .option('--overwrite', 'overwrite existing files')
@@ -26,7 +27,7 @@ gcg
     .option('--no-compile', 'disable compiling before running on tests')
     .option('-f, --folder <folder>', 'set test folder path. defaults to \'tests\\<task>\'')
     .option('-t, --test <testname>', 'run on chosen test only')
-    .option('-std', 'c++ standard for compiler. Defaults to c++17', 'c++17')
+    .option('--std <std>', 'c++ standard for compiler. Defaults to c++17', 'c++17')
     .action((task, cmd) => {
         const validator = new Validator(cmd, task);
         validator.start();
@@ -39,7 +40,12 @@ gcg
     .action(codeforcesInit);
 
 gcg
-    .command('add')
+    .command('add');
+
+gcg
+    .command('login [handle]')
+    .description('login to Codeforces')
+    .action((handle) => { codeforcesSetLogin(handle) });
 
 gcg
     .on('command:*', function () {

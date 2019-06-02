@@ -1,12 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : new P(function (resolve) { resolve(result.value); }).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 const fs_1 = require("fs");
 const node_html_parser_1 = require("node-html-parser");
@@ -14,55 +6,53 @@ const logger_1 = require("./logger");
 const Problem_1 = require("./models/Problem");
 const Test_1 = require("./models/Test");
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
-function codeforcesInit(contestId, cmd) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            const logger = new logger_1.Logger(cmd.log);
-            const sampleProgram = fs_1.readFileSync(__dirname + '/../res/templates/main.cpp');
-            const contestPageRaw = yield getRawPage(`http://codeforces.com/contest/${contestId}`);
-            const contestPage = node_html_parser_1.parse(contestPageRaw);
-            let problemset = [];
-            extractProblemNames(contestId, problemset, contestPage);
-            problemset.forEach(problem => {
-                const taskname = problem.name.toLowerCase();
-                const filename = './' + taskname + '.cpp';
-                if (cmd.overwrite || !fs_1.existsSync(filename)) {
-                    fs_1.writeFileSync(filename, sampleProgram);
-                    logger.log('Created file:', filename);
-                }
-                if (!fs_1.existsSync('./tests')) {
-                    fs_1.mkdirSync('./tests');
-                    logger.log("Created directory: ./tests");
-                }
-                if (!fs_1.existsSync('./tests/' + taskname)) {
-                    fs_1.mkdirSync('./tests/' + taskname);
-                    logger.log("Created directory: ./tests/" + taskname);
-                }
-                getRawPage(`http://codeforces.com/contest/${contestId}/problem/${problem.name}`)
-                    .then(problemPageRaw => {
-                    extractProblemTests(contestId, problem, problemPageRaw);
-                    var testc = 1;
-                    problem.tests.forEach(test => {
-                        var inPath = './tests/' + taskname + '/' + taskname + testc + '.in';
-                        var outPath = './tests/' + taskname + '/' + taskname + testc + '.out';
-                        testc++;
-                        if (cmd.overwrite || !fs_1.existsSync(inPath)) {
-                            fs_1.writeFileSync(inPath, test.input);
-                            logger.log('Created file:', inPath);
-                        }
-                        if (test.output && (cmd.overwrite || !fs_1.existsSync(outPath))) {
-                            fs_1.writeFileSync(outPath, test.output);
-                            logger.log('Created file:', outPath);
-                        }
-                    });
+async function codeforcesInit(contestId, cmd) {
+    try {
+        const logger = new logger_1.Logger(cmd.log);
+        const sampleProgram = fs_1.readFileSync(__dirname + '/../res/templates/main.cpp');
+        const contestPageRaw = await getRawPage(`http://codeforces.com/contest/${contestId}`);
+        const contestPage = node_html_parser_1.parse(contestPageRaw);
+        let problemset = [];
+        extractProblemNames(contestId, problemset, contestPage);
+        problemset.forEach(problem => {
+            const taskname = problem.name.toLowerCase();
+            const filename = './' + taskname + '.cpp';
+            if (cmd.overwrite || !fs_1.existsSync(filename)) {
+                fs_1.writeFileSync(filename, sampleProgram);
+                logger.log('Created file:', filename);
+            }
+            if (!fs_1.existsSync('./tests')) {
+                fs_1.mkdirSync('./tests');
+                logger.log("Created directory: ./tests");
+            }
+            if (!fs_1.existsSync('./tests/' + taskname)) {
+                fs_1.mkdirSync('./tests/' + taskname);
+                logger.log("Created directory: ./tests/" + taskname);
+            }
+            getRawPage(`http://codeforces.com/contest/${contestId}/problem/${problem.name}`)
+                .then(problemPageRaw => {
+                extractProblemTests(contestId, problem, problemPageRaw);
+                var testc = 1;
+                problem.tests.forEach(test => {
+                    var inPath = './tests/' + taskname + '/' + taskname + testc + '.in';
+                    var outPath = './tests/' + taskname + '/' + taskname + testc + '.out';
+                    testc++;
+                    if (cmd.overwrite || !fs_1.existsSync(inPath)) {
+                        fs_1.writeFileSync(inPath, test.input);
+                        logger.log('Created file:', inPath);
+                    }
+                    if (test.output && (cmd.overwrite || !fs_1.existsSync(outPath))) {
+                        fs_1.writeFileSync(outPath, test.output);
+                        logger.log('Created file:', outPath);
+                    }
                 });
             });
-        }
-        catch (err) {
-            console.error(err);
-            process.exit();
-        }
-    });
+        });
+    }
+    catch (err) {
+        console.error(err);
+        process.exit();
+    }
 }
 exports.codeforcesInit = codeforcesInit;
 function extractProblemTests(contestId, problem, problemPageRaw) {

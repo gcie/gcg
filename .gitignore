@@ -8,3 +8,5 @@
 
 .npmrc
 .vscode
+.secret
+test.ts

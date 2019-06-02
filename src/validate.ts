@@ -4,6 +4,18 @@ import { createReadStream, readdir, readFileSync, existsSync } from 'fs';
 import { Readable } from 'stream';
 import chalk from 'chalk';
 
+export function run(task: string, cmd: CommanderStatic) {
+    const sourcePath = task + '.cpp';
+    const programPath = './' + task;
+    var successes = 0, failures = 0;
+    const taskTestsFolderPath = cmd.folder || `tests/${task}`;
+    
+    if(!existsSync(sourcePath)) {
+        console.error(chalk.red('ERROR:'), "Could not find file: " + sourcePath);
+        process.exit();
+    }
+}
+
 export class Validator {
     programPath: string;
     sourcePath: string;
@@ -25,7 +37,7 @@ export class Validator {
         }
         if(this.cmd.compile) {
             execFile('g++', 
-                ['-std=c++17', this.sourcePath,  '-o', this.programName], (error: Error | null, stdout: string, stderr: string) => {
+                [`-std=${this.cmd.std}`, this.sourcePath,  '-o', this.programName], (error: Error | null, stdout: string, stderr: string) => {
                     if(error) {
                         console.error(chalk.red("COMPILE ERROR:"), stderr);
                         process.exit();
